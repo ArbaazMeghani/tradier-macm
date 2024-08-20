@@ -1,8 +1,12 @@
 import requests
 import time
 import argparse
+import os
+from dotenv import load_dotenv
 
-AUTH_TOKEN = ""
+load_dotenv()
+
+AUTH_TOKEN = os.getenv("TRADIER_AUTH_TOKEN")
 
 class Tradier:
     def __init__(self, auth_token):

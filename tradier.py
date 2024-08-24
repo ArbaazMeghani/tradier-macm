@@ -108,9 +108,19 @@ def main():
     
     if symbol:
         symbol = symbol.upper()
+    if side:
+        side = side.lower()
+    if duration:
+        duration = duration.lower()
+    if type:
+        type = type.lower()
     
     if help or not symbol or not side:
         print_help()
+        return
+    
+    if side == "sell" and check:
+        print("Cannot check for positions when selling")
         return
     
     print(f"Symbol: {symbol}, Side: {side}, Quantity: {quantity}, Duration: {duration}, Type: {type}, Price: {price}, Check: {check}")

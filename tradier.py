@@ -40,7 +40,7 @@ class Tradier:
         if duration not in ["day", "gtc", "pre", "post"]:
             raise ValueError("Duration must be either 'day', 'gtc', 'pre', or 'post'")
         if duration in ["gtc", "pre", "post"] and type == "market":
-            raise ValueError("GTC orders cannot be market orders")
+            raise ValueError("gtc, pre, post orders must be limit orders")
         
         
         url = f"{self.base_url}/accounts/{account_id}/orders"

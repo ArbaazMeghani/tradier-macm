@@ -61,7 +61,7 @@ class Tradier:
         return response.json()
 
 def print_help():
-    print("Usage: python tradier.py --symbol [SYMBOL] --side [SIDE] --quantity [QUANTITY] --duration [DURATION] --type [TYPE] --price [PRICE] --check")
+    print("Arguments: --symbol [SYMBOL] --side [SIDE] --quantity [QUANTITY] --duration [DURATION] --type [TYPE] --price [PRICE] --check")
     print("[Required] SYMBOL: the stock symbol")
     print("[Required] SIDE: buy or sell")
     print("[Optional, default: day] DURATION: day, gtc [limit required], pre [limit required], post [limit required]")

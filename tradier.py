@@ -109,7 +109,7 @@ def main():
     if symbol:
         symbol = symbol.upper()
     
-    if help:
+    if help or not symbol or not side:
         print_help()
         return
     

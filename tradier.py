@@ -131,7 +131,7 @@ def main():
             print(f"{account_id}: {resp}")
         except Exception as e:
             print(f"{account_id}: error - {e}")
-        time.sleep(0.6)
+        time.sleep(1.1 if check else 0.6)
     
     
 if __name__ == "__main__":

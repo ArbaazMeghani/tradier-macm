@@ -28,4 +28,4 @@
 - [Optional, default: market] TYPE: `market` or `limit`
 - [Optional, default: no check] CHECK: only buy if you don't already have a position
 - [Optional, default: 1] Quantity: Number of shares to buy/sell
-- PRICE: required for limit orders, not required for market orders
+- PRICE: required for limit orders, not required for market orders. Optionally, you can use `auto` for the price. It will use ask+0.10 for buy orders and bid-0.10 for sell orders

@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 AUTH_TOKEN = os.getenv("TRADIER_AUTH_TOKEN")
+AUTO_LIMIT_ADJ = 0.10
 
 class Tradier:
     def __init__(self, auth_token):
@@ -59,6 +60,20 @@ class Tradier:
         response = requests.post(url, headers=self.headers, data=payload)
         response.raise_for_status()
         return response.json()
+    
+    def _get_quote(self, symbol):
+        url = f"{self.base_url}/markets/quotes?symbols={symbol}"
+        response = requests.get(url, headers=self.headers)
+        return response.json()
+    
+    def get_auto_price(self, symbol, side):
+        quote = self._get_quote(symbol)
+        print(quote)
+        if side == "buy":
+            return str(quote["quotes"]["quote"]["ask"] + AUTO_LIMIT_ADJ)
+        else:
+            return str(quote["quotes"]["quote"]["bid"] - AUTO_LIMIT_ADJ)
+    
 
 def print_help():
     print("Arguments: --symbol [SYMBOL] --side [SIDE] --quantity [QUANTITY] --duration [DURATION] --type [TYPE] --price [PRICE] --check")
@@ -114,6 +129,8 @@ def main():
         duration = duration.lower()
     if type:
         type = type.lower()
+    if price:
+        price = price.lower()
     
     if help or not symbol or not side:
         print_help()
@@ -127,6 +144,11 @@ def main():
     
     tradier = Tradier(AUTH_TOKEN)
     profile = tradier.get_user_profile()
+    
+    if price == "auto":
+        price = tradier.get_auto_price(symbol, side)
+        print(f"Auto Limit Price: {price}")
+
     for account in profile["profile"]["account"]:
         account_id = account["account_number"]
         has_position = False
@@ -142,7 +164,6 @@ def main():
         except Exception as e:
             print(f"{account_id}: error - {e}")
         time.sleep(1.1 if check else 0.6)
-    
     
 if __name__ == "__main__":
     main()

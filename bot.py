@@ -104,8 +104,8 @@ async def trade(ctx: SlashContext, symbol: str, side: str, type: str = 'market',
                 continue
             
             try:
-                # resp = tradier.equity_order(account_id, symbol, side, quantity, duration, type, price)
-                await ctx.send(f"{account_id}: {"TEST"}")
+                resp = tradier.equity_order(account_id, symbol, side, quantity, duration, type, price)
+                await ctx.send(f"{account_id}: {resp}")
             except Exception as e:
                 await ctx.send(f"{account_id}: error - {e}")
             time.sleep(1.1 if check else 0.6)

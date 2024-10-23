@@ -1,10 +1,12 @@
 from interactions import slash_command, slash_option, OptionType, SlashCommandChoice, SlashContext, Embed, Client
 import os
+import time
 from dotenv import load_dotenv
+from tradier import Tradier, check_positions
 
 load_dotenv()
 
-
+AUTH_TOKEN = os.getenv("TRADIER_AUTH_TOKEN")
 bot = Client(token=os.getenv("DISCORD_BOT_TOKEN"))
 
 @slash_command(name="trade", description="Trade on tradier")
@@ -68,10 +70,47 @@ async def trade(ctx: SlashContext, symbol: str, side: str, type: str = 'market',
     try:
         await ctx.defer()
         
-        await ctx.send("test")
-        await ctx.followup.send("test")
+        if symbol:
+            symbol = symbol.upper()
+        if side:
+            side = side.lower()
+        if duration:
+            duration = duration.lower()
+        if type:
+            type = type.lower()
+        if price:
+            price = price.lower()
+        
+        if side == "sell" and check:
+            await ctx.send("Cannot check for positions when selling")
+            return
+        
+        await ctx.send(f"Symbol: {symbol}, Side: {side}, Quantity: {quantity}, Duration: {duration}, Type: {type}, Price: {price}, Check: {check}")
+        
+        tradier = Tradier(AUTH_TOKEN)
+        profile = tradier.get_user_profile()
+        
+        if price == "auto":
+            price = tradier.get_auto_price(symbol, side)
+            await ctx.send(f"Auto Limit Price: {price}")
+
+        for account in profile["profile"]["account"]:
+            account_id = account["account_number"]
+            has_position = False
+            if check:
+                has_position = check_positions(tradier, account_id, symbol)
+            
+            if check and has_position:
+                continue
+            
+            try:
+                # resp = tradier.equity_order(account_id, symbol, side, quantity, duration, type, price)
+                await ctx.send(f"{account_id}: {"TEST"}")
+            except Exception as e:
+                await ctx.send(f"{account_id}: error - {e}")
+            time.sleep(1.1 if check else 0.6)
     except Exception as e:
-        await ctx.send("Something went wrong, try again")
+        await ctx.send("Something went wrong: {e}")
 
 
 bot.start()

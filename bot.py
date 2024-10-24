@@ -101,6 +101,7 @@ async def trade(ctx: SlashContext, symbol: str, side: str, type: str = 'market',
                 has_position = check_positions(tradier, account_id, symbol)
             
             if check and has_position:
+                await ctx.send(f"{account_id} already has a position in {symbol}")
                 continue
             
             try:

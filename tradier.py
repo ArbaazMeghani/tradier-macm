@@ -96,7 +96,6 @@ def check_positions(tradier, account_id, symbol):
 
     for position in positions["positions"]["position"]:
         if position["symbol"] == symbol:
-            print(f"{account_id} already has a position in {symbol}")
             return True
     return False
 
@@ -156,6 +155,7 @@ def main():
             has_position = check_positions(tradier, account_id, symbol)
         
         if check and has_position:
+            print(f"{account_id} already has a position in {symbol}")
             continue
         
         try:

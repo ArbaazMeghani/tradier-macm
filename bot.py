@@ -96,11 +96,8 @@ async def trade(ctx: SlashContext, symbol: str, side: str, type: str = 'market',
 
         for account in profile["profile"]["account"]:
             account_id = account["account_number"]
-            has_position = False
-            if check:
-                has_position = check_positions(tradier, account_id, symbol)
             
-            if check and has_position:
+            if check and check_positions(tradier, account_id, symbol):
                 await ctx.send(f"{account_id} already has a position in {symbol}")
                 continue
             
